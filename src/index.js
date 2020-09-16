@@ -11,6 +11,8 @@ import {
 } from "./TransformUtils";
 
 export default class ViewTransformer extends React.Component {
+    _isMounted = false;
+
     static Rect = Rect;
     static getTransform = getTransform;
 
@@ -124,6 +126,8 @@ export default class ViewTransformer extends React.Component {
     }
 
     componentDidMount () {
+        this._isMounted = true;
+
         this.gestureResponder = createResponder({
             onStartShouldSetResponder: (evt, gestureState) => true,
             onMoveShouldSetResponderCapture: (evt, gestureState) => true,
@@ -155,6 +159,8 @@ export default class ViewTransformer extends React.Component {
     }
 
     componentWillUnmount () {
+        this._isMounted = false;
+
         this.cancelAnimation();
     }
 
@@ -524,7 +530,8 @@ export default class ViewTransformer extends React.Component {
             {
                 toValue: 1,
                 duration: duration,
-                easing: Easing.inOut(Easing.ease)
+                easing: Easing.inOut(Easing.ease),
+                useNativeDriver: true,
             }
         ).start();
     }
@@ -557,6 +564,10 @@ export default class ViewTransformer extends React.Component {
     }
 
     updateTransform (transform) {
+        if (!this._isMounted) {
+            return;
+        }
+
         this.setState(transform);
     }
 
