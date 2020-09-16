@@ -231,7 +231,8 @@ export default class ViewTransformer extends React.Component {
             dy = d.dy;
         }
 
-        if (!this.props.enableTranslate) {
+        // Enable translate always if image is zoomed.
+        if (!this.props.enableTranslate && this.state.scale <= 1) {
             dx = dy = 0;
         }
 
