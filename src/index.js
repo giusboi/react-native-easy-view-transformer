@@ -22,7 +22,7 @@ export default class ViewTransformer extends React.Component {
         enableTranslate: PropTypes.bool,
         maxOverScrollDistance: PropTypes.number,
         maxScale: PropTypes.number,
-        disableTranslateScaleLimit: PropTypes.number,
+        disableTranslateScaleLimit: PropTypes.number.isRequired,
         contentAspectRatio: PropTypes.number,
         enableResistance: PropTypes.bool,
         resistantStrHorizontal: PropTypes.oneOfType([
