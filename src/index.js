@@ -22,6 +22,7 @@ export default class ViewTransformer extends React.Component {
         enableTranslate: PropTypes.bool,
         maxOverScrollDistance: PropTypes.number,
         maxScale: PropTypes.number,
+        disableTranslateScaleLimit: PropTypes.number,
         contentAspectRatio: PropTypes.number,
         enableResistance: PropTypes.bool,
         resistantStrHorizontal: PropTypes.oneOfType([
@@ -129,8 +130,15 @@ export default class ViewTransformer extends React.Component {
         this._isMounted = true;
 
         this.gestureResponder = createResponder({
-            onStartShouldSetResponder: (evt, gestureState) => true,
-            onMoveShouldSetResponderCapture: (evt, gestureState) => true,
+            // Don't catch all events at beginning.
+            onStartShouldSetResponder: (evt, gestureState) => false,
+            // Resign if single tap and not zoomed.
+            onMoveShouldSetResponderCapture: (evt, gestureState) => {
+                if (evt.touchHistory.numberActiveTouches >= 2 || this.state.scale > this.props.disableTranslateScaleLimit) {
+                    return true;
+                }
+                return false;
+            },
             // onMoveShouldSetResponder: this.handleMove,
             onResponderMove: this.onResponderMove,
             onResponderGrant: this.onResponderGrant,
